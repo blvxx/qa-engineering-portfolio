@@ -21,7 +21,7 @@ I build reproducible QA case studies around functional, regression, exploratory,
 
 ## Selected projects
 
-The project implementations are currently maintained in the original engineering repository. This repository is the dedicated QA entry point; links below open the source code and evidence.
+This repository is the dedicated QA entry point. Selected projects, executable tests, documentation and CI evidence are maintained here; supporting labs are linked where they add distinct evidence.
 
 | Project | Scope | Evidence |
 |---|---|---|
