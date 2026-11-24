@@ -129,4 +129,4 @@ The numbers above are an example report format, not an actual test run.
 
 ---
 
-**Related:** [QA Engineering Strategy](./qa-engineering-strategy.md) · [QA Portfolio](./qa-portfolio.md)
+**Related:** [QA Engineering Strategy](./qa-engineering-strategy.md) · [QA Portfolio](./README.md)
