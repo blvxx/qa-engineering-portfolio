@@ -56,7 +56,7 @@ After restoring a dependency:
 - Make a representative read and write request.
 - Check that error and latency rates move back toward baseline.
 - Verify no duplicate ledger effect was created during retries.
-- Record detection time, mitigation time and recovery evidence in the [incident report template](../../support-engineering-lab/docs/incident-report-template.md).
+- Record detection time, mitigation time and recovery evidence in the [incident report template](https://github.com/blvxx/application-support-portfolio/blob/main/support-engineering-lab/docs/incident-report-template.md).
 
 ## What to include in the portfolio report
 
