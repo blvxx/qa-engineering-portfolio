@@ -23,17 +23,17 @@ The project implementations are currently maintained in the original engineering
 
 | Project | Scope | Evidence |
 |---|---|---|
-| [Python API Automation](https://github.com/blvxx/portfolio/tree/main/api-automation) | REST client, pytest, schemas, negative cases, pagination and retry boundaries | 62 tests; successful CI matrix on Python 3.10 and 3.12 |
-| [Booking API QA](https://github.com/blvxx/portfolio/tree/main/qa-cases/api-contract-negative) | Contract testing, validation, authorization, idempotency and state transitions | 31 tests; 100% statement coverage for the named `app.py` and `store.py` modules |
-| [Checkout Regression](https://github.com/blvxx/portfolio/tree/main/qa-cases/checkout-regression) | Cart, pricing, promotions, stock boundaries and checkout UI | 24 Playwright scenarios |
-| [FinTech QA Platform](https://github.com/blvxx/portfolio/tree/main/fintech-qa-platform) | Payment/Ledger integration, PostgreSQL, invariants, observability and recovery | Successful CI across quality, integration smoke and UI E2E jobs |
+| [Python API Automation](./api-automation) | REST client, pytest, schemas, negative cases, pagination and retry boundaries | 62 tests; successful CI matrix on Python 3.10 and 3.12 |
+| [Booking API QA](./qa-cases/api-contract-negative) | Contract testing, validation, authorization, idempotency and state transitions | 31 tests; 100% statement coverage for the named `app.py` and `store.py` modules |
+| [Checkout Regression](./qa-cases/checkout-regression) | Cart, pricing, promotions, stock boundaries and checkout UI | 24 Playwright scenarios |
+| [FinTech QA Platform](./fintech-qa-platform) | Payment/Ledger integration, PostgreSQL, invariants, observability and recovery | Successful CI across quality, integration smoke and UI E2E jobs |
 | [Playwright QA Lab](https://github.com/blvxx/playwright-qa-lab) | Browser regression, accessibility, persistence and manual test design | 11 E2E tests and 20 documented manual cases |
 
 ## QA engineering documents
 
-- [QA Engineering Strategy](https://github.com/blvxx/portfolio/blob/main/qa-engineering-strategy.md) — risk prioritisation, test levels, traceability, defect lifecycle, quality gates and release recommendation.
-- [Mobile / Android TV / Smart TV Checklist](https://github.com/blvxx/portfolio/blob/main/qa-mobile-tv-checklist.md) — device matrix, installation, lifecycle, network, remote navigation and media scenarios.
-- [QA & Commercial Problem-Solving Casebook](https://github.com/blvxx/portfolio/blob/main/qa-commercial-casebook.md) — e-commerce, financial integrity, wholesale order intake and AI-assisted support cases.
+- [QA Engineering Strategy](./qa-engineering-strategy.md) — risk prioritisation, test levels, traceability, defect lifecycle, quality gates and release recommendation.
+- [Mobile / Android TV / Smart TV Checklist](./qa-mobile-tv-checklist.md) — device matrix, installation, lifecycle, network, remote navigation and media scenarios.
+- [QA & Commercial Problem-Solving Casebook](./qa-commercial-casebook.md) — e-commerce, financial integrity, wholesale order intake and AI-assisted support cases.
 
 ## How I approach quality
 
@@ -58,10 +58,10 @@ These are implemented portfolio sandboxes and commercial solution concepts, not 
 
 ## CI evidence
 
-- [API Automation — 62 tests](https://github.com/blvxx/portfolio/actions/runs/45102695248)
-- [Booking API — 31 tests](https://github.com/blvxx/portfolio/actions/runs/44993766677)
-- [Checkout Regression — 24 scenarios](https://github.com/blvxx/portfolio/actions/runs/44993763830)
-- [FinTech QA Platform](https://github.com/blvxx/portfolio/actions/runs/45100258032)
+- [API Automation — 62 tests](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/api-automation.yml)
+- [Booking API — 31 tests](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/qa-booking-api.yml)
+- [Checkout Regression — 24 scenarios](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/qa-checkout-regression.yml)
+- [FinTech QA Platform](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/fintech-qa-platform.yml)
 - [Playwright QA Lab — 11 E2E tests](https://github.com/blvxx/playwright-qa-lab/actions/runs/45155361776)
 
 **Coverage note:** the Booking API's 100% figure is statement coverage for two named modules only; it is not branch coverage, full requirements coverage or proof of production quality. A successful workflow verifies only the checks included in that run.
