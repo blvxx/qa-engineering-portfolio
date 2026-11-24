@@ -29,7 +29,12 @@ The project implementations are currently maintained in the original engineering
 | [Booking API QA](./qa-cases/api-contract-negative) | Contract testing, validation, authorization, idempotency and state transitions | 31 tests; 100% statement coverage for the named `app.py` and `store.py` modules |
 | [Checkout Regression](./qa-cases/checkout-regression) | Cart, pricing, promotions, stock boundaries and checkout UI | 24 Playwright scenarios |
 | [FinTech QA Platform](./fintech-qa-platform) | Payment/Ledger integration, PostgreSQL, invariants, observability and recovery | Successful CI across quality, integration smoke and UI E2E jobs |
+| [DWH Data Quality & ETL Testing](./dwh-data-quality-testing) | Airflow DAG, PostgreSQL raw/staging/core/mart, Python/SQL DQ gates, retries and reconciliation | Dedicated PostgreSQL CI workflow; Airflow orchestration documented and runnable locally |
 | [Playwright QA Lab](https://github.com/blvxx/playwright-qa-lab) | Browser regression, accessibility, persistence and manual test design | 11 E2E tests and 20 documented manual cases |
+
+## Data platform and ETL testing
+
+[Open DWH Data Quality & ETL Testing Platform](./dwh-data-quality-testing) — layered warehouse, Airflow orchestration, pre-promotion DQ gate, idempotent replay and mart reconciliation. Cube REST API and dbt remain clearly marked as design-only extensions.
 
 ## QA engineering documents
 
