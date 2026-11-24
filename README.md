@@ -13,8 +13,8 @@ I build reproducible QA case studies around functional, regression, exploratory,
 ## Core QA capabilities
 
 - **Web testing:** functional and regression testing, responsive behavior, Chrome DevTools (Elements, Console, Network, Application, Device Toolbar).
-- **Mobile testing:** Android and iOS application flows, lifecycle, permissions, connectivity, sessions and error handling.
-- **TV testing:** Android TV / Smart TV installation and verification, D-pad navigation, visible focus, remote-control behavior, playback and recovery.
+- **Mobile test design:** Android/iOS lifecycle, permissions, connectivity, sessions and error-handling scenarios documented as reusable checklists.
+- **TV test design:** Android TV / Smart TV installation, D-pad navigation, visible focus, remote-control behavior, playback and recovery scenarios. Physical-device execution is only claimed when the exact device/build matrix is recorded.
 - **API testing:** REST, HTTP, Postman, Swagger/OpenAPI, JSON Schema, request/response analysis and negative scenarios.
 - **Automation:** Python, pytest, requests, JavaScript, Playwright and GitHub Actions.
 - **Data and integration:** SQL, PostgreSQL, Docker Compose, service contracts, transactional invariants and controlled failure checks.
