@@ -152,4 +152,4 @@ A commercially attractive idea is not the same as a commercially successful deli
 
 ---
 
-**Related:** [QA Engineering Strategy](./qa-engineering-strategy.md) · [QA Portfolio](./qa-portfolio.md) · [GitHub Profile](https://github.com/blvxx)
+**Related:** [QA Engineering Strategy](./qa-engineering-strategy.md) · [QA Portfolio](./README.md) · [GitHub Profile](https://github.com/blvxx)
