@@ -204,4 +204,4 @@ The linked systems are independent portfolio sandboxes and synthetic business sc
 
 ---
 
-**Artem Kalinin** · [GitHub](https://github.com/blvxx) · [QA Portfolio](./qa-portfolio.md)
+**Artem Kalinin** · [GitHub](https://github.com/blvxx) · [QA Portfolio](./README.md)
