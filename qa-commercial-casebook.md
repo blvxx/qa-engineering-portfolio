@@ -128,8 +128,8 @@ A controlled assistant can classify incoming requests, retrieve relevant runbook
 
 **Portfolio evidence**
 
-- [AI Support Triage Agent](./ai-support-triage-agent/)
-- [Incident Investigation Lab](./incident-lab/)
+- [AI Support Triage Agent](https://github.com/blvxx/python-backend-portfolio/tree/main/ai-support-triage-agent)
+- [Incident Investigation Lab](https://github.com/blvxx/application-support-portfolio/tree/main/incident-lab)
 
 **Potential business value**
 
