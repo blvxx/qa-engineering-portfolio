@@ -1,0 +1,50 @@
+name: DWH Data Quality CI
+
+on:
+  push:
+    paths:
+      - "dwh-data-quality-testing/**"
+      - ".github/workflows/dwh-quality.yml"
+  pull_request:
+    paths:
+      - "dwh-data-quality-testing/**"
+      - ".github/workflows/dwh-quality.yml"
+  workflow_dispatch:
+
+jobs:
+  dwh-quality:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: warehouse
+          POSTGRES_USER: warehouse
+          POSTGRES_PASSWORD: warehouse_demo_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U warehouse -d warehouse"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: dwh-data-quality-testing
+    env:
+      WAREHOUSE_DSN: postgresql://warehouse:warehouse_demo_only@localhost:5432/warehouse
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Compile source and DAG
+        run: python -m compileall -q src dags tests
+      - name: Run PostgreSQL DWH pipeline and quality gates
+        run: python src/pipeline.py
+      - name: Run unit tests
+        run: pytest -q
