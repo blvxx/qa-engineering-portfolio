@@ -78,6 +78,11 @@ PYTHONPATH=src pytest -q
 
 See [test scenarios](docs/test-scenarios.md), [source-to-target mapping](docs/source-to-target.md), [Airflow recovery notes](docs/airflow-recovery.md) and [Cube extension design](docs/olap-cube-extension.md).
 
+
+## Verified CI evidence
+
+[Successful DWH Data Quality CI run — 24 November 2026](https://github.com/blvxx/qa-engineering-portfolio/actions/runs/45413753188). The workflow successfully compiled the source and DAG, ran the PostgreSQL pipeline and quality gates, and completed the Python unit tests.
+
 ## Limitations
 
 Synthetic data only; one PostgreSQL instance represents logical DWH layers; teaching-scale batch, not an MPP benchmark. The date-slice replay demonstrates orchestration parameters, not a production CDC strategy. Cube and dbt are design-only future extensions. Demo credentials must never be reused in production.
