@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "JSONPlaceholder Posts API — QA Collection",
+    "description": "Postman collection for manual and automated checks of the JSONPlaceholder Posts resource. Includes GET, filtering, CRUD operations, negative scenarios, and response assertions. JSONPlaceholder simulates write operations; changes are not persisted.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://jsonplaceholder.typicode.com",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Read",
+      "item": [
+        {
+          "name": "Get all posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/posts",
+            "description": "Checks collection status, JSON response, expected size and required object fields."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "pm.test('Returns 100 posts', () => pm.expect(pm.response.json()).to.have.lengthOf(100));",
+                  "pm.test('Each post has the required fields', () => {",
+                  "  pm.response.json().forEach((post) => {",
+                  "    pm.expect(post).to.have.all.keys('userId', 'id', 'title', 'body');",
+                  "    pm.expect(post.userId).to.be.a('number');",
+                  "    pm.expect(post.id).to.be.a('number');",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get post by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/posts/1",
+            "description": "Reads a single post and validates its main fields."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Post ID is 1', () => pm.expect(pm.response.json().id).to.eql(1));",
+                  "pm.test('Required fields are present', () => pm.expect(pm.response.json()).to.have.all.keys('userId', 'id', 'title', 'body'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filter posts by user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/posts?userId=1",
+            "description": "Checks query parameter filtering."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Every result belongs to user 1', () => pm.response.json().forEach((post) => pm.expect(post.userId).to.eql(1)));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get comments for post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/posts/1/comments",
+            "description": "Checks the nested comments relationship for a post."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns five comments for post 1', () => pm.expect(pm.response.json()).to.have.lengthOf(5));",
+                  "pm.test('Every comment belongs to post 1', () => pm.response.json().forEach((comment) => pm.expect(comment.postId).to.eql(1)));",
+                  "pm.test('Comment objects contain required fields', () => pm.response.json().forEach((comment) => pm.expect(comment).to.have.all.keys('postId', 'id', 'name', 'email', 'body')));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CRUD",
+      "item": [
+        {
+          "name": "Create post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"title\": \"Postman QA collection\",\n  \"body\": \"Created during API testing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/posts",
+            "description": "Creates a simulated resource. JSONPlaceholder does not persist the created post."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201 Created', () => pm.response.to.have.status(201));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "pm.test('Created resource echoes request fields', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.id).to.be.a('number');",
+                  "  pm.expect(body.userId).to.eql(1);",
+                  "  pm.expect(body.title).to.eql('Postman QA collection');",
+                  "  pm.expect(body.body).to.eql('Created during API testing');",
+                  "});",
+                  "pm.test('Demo API returns the generated ID', () => pm.expect(pm.response.json().id).to.eql(101));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Replace post (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"title\": \"Updated by PUT\",\n  \"body\": \"Full replacement payload\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/posts/1",
+            "description": "Sends a complete replacement payload."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Full replacement fields are returned', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.id).to.eql(1);",
+                  "  pm.expect(body.title).to.eql('Updated by PUT');",
+                  "  pm.expect(body.body).to.eql('Full replacement payload');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Partially update post (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated by PATCH\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/posts/1",
+            "description": "Sends a partial update and checks the returned representation."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Updated title is returned', () => pm.expect(pm.response.json().title).to.eql('Updated by PATCH'));",
+                  "pm.test('Unchanged fields remain in the representation', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.id).to.eql(1);",
+                  "  pm.expect(body.userId).to.eql(1);",
+                  "  pm.expect(body.body).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/posts/1",
+            "description": "Checks successful simulated deletion. The source data remains unchanged on JSONPlaceholder."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Negative",
+      "item": [
+        {
+          "name": "Unknown post ID returns 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/posts/999999",
+            "description": "Negative check for a non-existent resource."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Response body is an empty object', () => pm.expect(pm.response.json()).to.eql({}));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

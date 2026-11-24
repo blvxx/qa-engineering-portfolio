@@ -1,0 +1,91 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fintech_qa
+      POSTGRES_USER: qa
+      POSTGRES_PASSWORD: qa_demo_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qa -d fintech_qa"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - qa_postgres_data:/var/lib/postgresql/data
+
+  ledger:
+    build: .
+    command: uvicorn services.ledger_service.main:app --host 0.0.0.0 --port 8001
+    environment:
+      DATABASE_URL: postgresql+psycopg://qa:qa_demo_password@db:5432/fintech_qa
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8001:8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+
+  payment:
+    build: .
+    command: uvicorn services.payment_service.main:app --host 0.0.0.0 --port 8000
+    environment:
+      DATABASE_URL: postgresql+psycopg://qa:qa_demo_password@db:5432/fintech_qa
+      LEDGER_SERVICE_URL: http://ledger:8001
+    depends_on:
+      db:
+        condition: service_healthy
+      ledger:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/alerts.yml:/etc/prometheus/alerts.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      - payment
+      - ledger
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin_demo_password
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - prometheus
+
+  frontend:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./frontend/index.html:/usr/share/nginx/html/index.html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - payment
+      - ledger
+    ports:
+      - "127.0.0.1:8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  qa_postgres_data:

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d18">
+  <meta name="description" content="FinTech QA Engineering Platform — демонстрационный проект Артёма Калинина: API, integration, Playwright E2E, PostgreSQL, Docker Compose, pytest, Allure и GitHub Actions.">
+  <title>FinTech QA Platform — проект Артёма Калинина</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080d18;--panel:#101a2b;--panel2:#142137;--line:#263752;--text:#edf3ff;--muted:#a4b2ca;--blue:#71b7ff;--green:#63e6a5;--violet:#b8a2ff;--amber:#ffd27a;--max:1120px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 82% 0%,#1b3152 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.65 Inter,system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(var(--max),calc(100% - 40px));margin:auto}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--line);gap:16px}.brand{font-weight:700;letter-spacing:.04em;color:var(--text)}.back{font-size:14px;color:var(--muted)}.hero{padding:76px 0 54px}.eyebrow{color:var(--green);font:12px ui-monospace,monospace;letter-spacing:.17em;text-transform:uppercase}.hero h1{max-width:850px;margin:18px 0;font-size:clamp(38px,7vw,72px);line-height:1.05;letter-spacing:-.055em}.gradient{background:linear-gradient(100deg,var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:760px;color:var(--muted);font-size:19px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.btn{display:inline-flex;padding:12px 18px;border-radius:10px;border:1px solid var(--line);font-weight:650}.primary{background:linear-gradient(120deg,#3688df,#8d76e8);border-color:transparent;color:white}.secondary{color:var(--text);background:#ffffff08}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0 60px}.stat,.panel,.shot{background:linear-gradient(145deg,#142137eF,#0d1727);border:1px solid var(--line);border-radius:16px}.stat{padding:20px}.stat strong{display:block;font-size:34px;line-height:1.2;color:var(--green)}.stat span{display:block;margin-top:7px;color:var(--muted);font-size:13px}.section{padding:34px 0 48px}.section h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.035em;margin:0 0 10px}.sub{color:var(--muted);max-width:760px;margin:0 0 24px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.panel{padding:24px}.panel h3{margin:0 0 12px;font-size:19px}.panel p,.panel li{color:var(--muted)}.panel ul{padding-left:20px;margin:8px 0}.architecture{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:18px}.node{padding:16px;border:1px solid var(--line);background:#0b1423;border-radius:12px;text-align:center}.node b{display:block}.node small{color:var(--muted)}.arrow{color:var(--blue);font-size:22px;text-align:center}.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.stack span{padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:#cbd8ee;font:12px ui-monospace,monospace;background:#ffffff06}.shots{display:grid;grid-template-columns:1fr 1fr;gap:16px}.shot{overflow:hidden}.shot img{display:block;width:100%;height:auto;background:#0a0f18}.shot figcaption{padding:14px 17px;color:var(--muted);font-size:14px}.check{color:var(--green)}.links{display:flex;flex-wrap:wrap;gap:12px}.links a{padding:10px 13px;border:1px solid var(--line);border-radius:9px}.notice{margin:28px 0 60px;padding:18px 20px;border-left:3px solid var(--amber);background:#ffd27a0b;color:var(--muted);border-radius:0 10px 10px 0}.footer{border-top:1px solid var(--line);padding:24px 0 36px;color:var(--muted);font-size:13px}
+    @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.grid,.shots{grid-template-columns:1fr}.architecture{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.hero{padding-top:54px}.lead{font-size:17px}}@media(max-width:420px){.wrap{width:min(var(--max),calc(100% - 28px))}.stats{gap:8px}.stat{padding:15px}.stat strong{font-size:28px}.top{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand mono" href="../index.html">BLVXX / QA PORTFOLIO</a>
+      <a class="back" href="../index.html">← Вернуться в основное портфолио</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Independent QA engineering case · 2026</div>
+        <h1>FinTech QA<br><span class="gradient">Engineering Platform</span></h1>
+        <p class="lead">Демонстрационная платёжная платформа, на которой проверяется полный путь операции: от отправки REST-запроса и обработки сервисами до записи в ledger, изменения баланса и проверки результата в браузере.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/blvxx/portfolio/tree/main/fintech-qa-platform">Открыть исходный код ↗</a>
+          <a class="btn secondary" href="https://github.com/blvxx/portfolio/actions/runs/44876335369">Посмотреть успешный CI ↗</a>
+          <a class="btn secondary" href="README.md">Техническая документация ↗</a>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Проверенные результаты проекта">
+        <div class="stat"><strong>9</strong><span>API-тестов pytest</span></div>
+        <div class="stat"><strong>2</strong><span>браузерных E2E-сценария Playwright</span></div>
+        <div class="stat"><strong>3/3</strong><span>успешных CI job в последнем проверенном запуске</span></div>
+        <div class="stat"><strong>11</strong><span>автоматизированных проверок суммарно</span></div>
+      </section>
+
+      <section class="section">
+        <h2>Что именно тестируется</h2>
+        <p class="sub">Ключевая задача — проверить не только HTTP-ответ, но и согласованность данных между платёжным сервисом и бухгалтерским ledger.</p>
+        <div class="grid">
+          <article class="panel">
+            <h3>Payment Service</h3>
+            <ul>
+              <li>Создание платежа и получение его статуса</li>
+              <li>Валидация суммы и счетов</li>
+              <li>Повторный запрос с idempotency key</li>
+              <li>Обработка недоступности Ledger Service</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>Ledger Service</h3>
+            <ul>
+              <li>Двойная запись debit / credit</li>
+              <li>Сохранение баланса счетов</li>
+              <li>Отсутствие повторного списания при retry</li>
+              <li>Сверка сумм и валют между сервисами</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>Browser E2E</h3>
+            <ul>
+              <li>Пользователь отправляет платёж через UI</li>
+              <li>Интерфейс отображает успешный результат</li>
+              <li>Баланс клиента отражает операцию</li>
+              <li>Форма блокирует нулевую сумму</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>Test engineering</h3>
+            <ul>
+              <li>Тест-стратегия, план и тест-кейсы</li>
+              <li>Риски, SQL quality checks и шаблоны баг-репортов</li>
+              <li>Postman collection для ручных API-проверок</li>
+              <li>JUnit XML и Allure HTML в CI artifacts</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Архитектура тестового стенда</h2>
+        <p class="sub">Сервисы запускаются в Docker Compose. UI отдаётся Nginx, backend-сервисы взаимодействуют по HTTP и сохраняют данные в PostgreSQL.</p>
+        <div class="panel">
+          <div class="architecture">
+            <div class="node"><b>Playwright</b><small>Browser E2E</small></div>
+            <div class="arrow">→</div>
+            <div class="node"><b>Nginx · UI</b><small>localhost:8080</small></div>
+          </div>
+          <div class="architecture">
+            <div class="node"><b>Payment Service</b><small>FastAPI · :8000</small></div>
+            <div class="arrow">⇄</div>
+            <div class="node"><b>Ledger Service</b><small>FastAPI · :8001</small></div>
+          </div>
+          <div class="architecture">
+            <div class="node"><b>PostgreSQL</b><small>Payments · Transfers · Ledger entries</small></div>
+            <div class="arrow">↑</div>
+            <div class="node"><b>pytest / SQL checks</b><small>API · Integration · Data validation</small></div>
+          </div>
+          <div class="stack"><span>Python</span><span>FastAPI</span><span>pytest</span><span>Playwright</span><span>Allure</span><span>PostgreSQL</span><span>Docker Compose</span><span>GitHub Actions</span><span>Postman</span><span>SQL</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Результат работы тестов</h2>
+        <p class="sub">Скриншоты созданы непосредственно в ходе успешного CI-запуска: Playwright сохранил состояние UI после операции, а Allure — сводный отчёт.</p>
+        <div class="shots">
+          <figure class="shot">
+            <img src="docs/screenshots/payment-ui.png" alt="Скриншот интерфейса платежей после успешной операции и проверки баланса" loading="lazy">
+            <figcaption><span class="check">✓</span> Playwright: успешный платёж и проверка баланса</figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="docs/screenshots/allure-report.png" alt="Скриншот Allure отчёта по результатам E2E" loading="lazy">
+            <figcaption><span class="check">✓</span> Allure: HTML-отчёт браузерных проверок</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>CI pipeline</h2>
+        <div class="panel">
+          <ul>
+            <li><span class="check">✓</span> <b>quality</b> — Ruff lint и pytest API suite</li>
+            <li><span class="check">✓</span> <b>compose-smoke</b> — сборка сервисов, платёж, повторный запрос и проверка балансов в PostgreSQL</li>
+            <li><span class="check">✓</span> <b>ui-e2e</b> — запуск Chromium, Playwright, генерация Allure и публикация скриншотов</li>
+          </ul>
+          <p class="sub">Последний проверенный запуск: <a href="https://github.com/blvxx/portfolio/actions/runs/44876335369">GitHub Actions · run #44876335369</a>. Все три job завершились успешно; JUnit и Allure загружены как CI artifacts.</p>
+          <div class="links">
+            <a href="https://github.com/blvxx/portfolio/actions/runs/44876335369">CI run ↗</a>
+            <a href="https://github.com/blvxx/portfolio/tree/main/fintech-qa-platform/e2e">E2E tests ↗</a>
+            <a href="https://github.com/blvxx/portfolio/tree/main/fintech-qa-platform/docs">Test documentation ↗</a>
+            <a href="https://github.com/blvxx/portfolio/tree/main/fintech-qa-platform/postman">Postman collection ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="notice"><b>Границы демонстрации.</b> Это учебно-портфолийный стенд с синтетическими данными, а не реальная платёжная система. Сервисы используют один экземпляр PostgreSQL с раздельными таблицами; межсервисный вызов синхронный. Авторизация, production security, нагрузочное тестирование и outbox/saga не входят в объём проекта.</aside>
+    </main>
+
+    <footer class="footer">Артём Калинин · QA Engineering Portfolio · <a href="https://github.com/blvxx">GitHub</a> · <a href="../index.html">Основное портфолио</a></footer>
+  </div>
+</body>
+</html>

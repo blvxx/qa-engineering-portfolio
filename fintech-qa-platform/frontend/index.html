@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinTech Demo — Payments</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, system-ui, sans-serif; background: #f3f5f8; color: #172033; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 40px 18px; }
+    main { max-width: 920px; margin: auto; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    .muted { color: #687386; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    section { background: white; border: 1px solid #e2e7ef; border-radius: 14px; padding: 22px; box-shadow: 0 5px 18px #1720330a; }
+    h2 { margin: 0 0 18px; font-size: 19px; }
+    label { display: block; margin: 13px 0 6px; font-size: 13px; font-weight: 650; }
+    input, select { width: 100%; padding: 11px 12px; border: 1px solid #cbd3df; border-radius: 8px; font: inherit; }
+    button { margin-top: 18px; border: 0; border-radius: 8px; padding: 11px 16px; color: white; background: #2457d6; font: inherit; font-weight: 650; cursor: pointer; }
+    button:hover { background: #1947b8; }
+    button:disabled { opacity: .6; cursor: wait; }
+    output { display: block; min-height: 24px; margin-top: 14px; font-size: 14px; overflow-wrap: anywhere; }
+    output[data-state="success"] { color: #137547; }
+    output[data-state="error"] { color: #b42318; }
+    .notice { margin-top: 22px; font-size: 12px; color: #687386; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Payment operations</h1>
+    <div class="muted">FinTech QA Platform · demo environment</div>
+  </header>
+  <div class="grid">
+    <section aria-labelledby="payment-heading">
+      <h2 id="payment-heading">Create payment</h2>
+      <form id="payment-form">
+        <label for="idempotency-key">Idempotency key</label>
+        <input id="idempotency-key" name="idempotency_key" minlength="8" required value="demo-payment-0001">
+        <label for="customer-account">Customer account</label>
+        <input id="customer-account" name="customer_account" minlength="3" required value="customer-001">
+        <label for="merchant-account">Merchant account</label>
+        <input id="merchant-account" name="merchant_account" minlength="3" required value="merchant-001">
+        <label for="amount">Amount (minor units)</label>
+        <input id="amount" name="amount_minor" type="number" min="1" max="100000000" required value="2500">
+        <label for="currency">Currency</label>
+        <select id="currency" name="currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select>
+        <button id="submit-payment" type="submit">Submit payment</button>
+      </form>
+      <output id="payment-result" role="status" aria-live="polite"></output>
+    </section>
+    <section aria-labelledby="balance-heading">
+      <h2 id="balance-heading">Account balance</h2>
+      <form id="balance-form">
+        <label for="account-id">Account ID</label>
+        <input id="account-id" name="account_id" minlength="3" required value="customer-001">
+        <label for="balance-currency">Currency</label>
+        <select id="balance-currency" name="currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select>
+        <button id="check-balance" type="submit">Check balance</button>
+      </form>
+      <output id="balance-result" role="status" aria-live="polite"></output>
+    </section>
+  </div>
+  <p class="notice">This is a synthetic demo. Do not enter real personal or payment information.</p>
+</main>
+<script>
+  const paymentForm = document.querySelector("#payment-form");
+  const paymentResult = document.querySelector("#payment-result");
+  const balanceForm = document.querySelector("#balance-form");
+  const balanceResult = document.querySelector("#balance-result");
+
+  paymentForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = document.querySelector("#submit-payment");
+    button.disabled = true;
+    paymentResult.dataset.state = "";
+    paymentResult.textContent = "Submitting…";
+    const form = new FormData(paymentForm);
+    const payload = Object.fromEntries(form.entries());
+    payload.amount_minor = Number(payload.amount_minor);
+    try {
+      const response = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || "Payment request failed");
+      paymentResult.dataset.state = "success";
+      paymentResult.textContent = `Payment posted · ID ${data.payment_id} · ${data.duplicate ? "duplicate retry" : "new payment"}`;
+    } catch (error) {
+      paymentResult.dataset.state = "error";
+      paymentResult.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  balanceForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const account = document.querySelector("#account-id").value.trim();
+    const currency = document.querySelector("#balance-currency").value;
+    balanceResult.dataset.state = "";
+    balanceResult.textContent = "Loading…";
+    try {
+      const response = await fetch(`/api/accounts/${encodeURIComponent(account)}/balance?currency=${currency}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || "Balance request failed");
+      balanceResult.dataset.state = "success";
+      balanceResult.textContent = `Balance: ${data.balance_minor} ${data.currency}`;
+    } catch (error) {
+      balanceResult.dataset.state = "error";
+      balanceResult.textContent = error.message;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+{
+  "info": {
+    "_postman_id": "7a7b32d1-9f4b-4f40-8a7d-5c4f1f0a2026",
+    "name": "FinTech QA Engineering Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Payment-to-ledger API test collection. Uses synthetic data only."
+  },
+  "variable": [
+    {
+      "key": "paymentUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "ledgerUrl",
+      "value": "http://localhost:8001"
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "postman-demo-0001"
+    },
+    {
+      "key": "paymentId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Payment Service",
+      "item": [
+        {
+          "name": "Create payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"{{idempotencyKey}}\",\n  \"customer_account\": \"customer-postman\",\n  \"merchant_account\": \"merchant-postman\",\n  \"amount_minor\": 2500,\n  \"currency\": \"RUB\"\n}"
+            },
+            "url": "{{paymentUrl}}/payments"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Payment is posted', () => pm.expect(body.status).to.eql('posted'));",
+                  "pm.collectionVariables.set('paymentId', body.payment_id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get payment",
+          "request": {
+            "method": "GET",
+            "url": "{{paymentUrl}}/payments/{{paymentId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Payment is posted', () => pm.expect(pm.response.json().status).to.eql('posted'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Repeat payment (idempotency)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"{{idempotencyKey}}\",\n  \"customer_account\": \"customer-postman\",\n  \"merchant_account\": \"merchant-postman\",\n  \"amount_minor\": 2500,\n  \"currency\": \"RUB\"\n}"
+            },
+            "url": "{{paymentUrl}}/payments"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Duplicate is safely recognized', () => pm.expect(pm.response.json().duplicate).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ledger Service",
+      "item": [
+        {
+          "name": "Customer balance",
+          "request": {
+            "method": "GET",
+            "url": "{{ledgerUrl}}/accounts/customer-postman/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Customer is debited', () => pm.expect(pm.response.json().balance_minor).to.eql(-2500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Merchant balance",
+          "request": {
+            "method": "GET",
+            "url": "{{ledgerUrl}}/accounts/merchant-postman/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Merchant is credited', () => pm.expect(pm.response.json().balance_minor).to.eql(2500));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

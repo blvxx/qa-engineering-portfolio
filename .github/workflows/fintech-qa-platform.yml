@@ -1,0 +1,235 @@
+name: FinTech QA Engineering Platform
+
+on:
+  push:
+    paths:
+      - "fintech-qa-platform/**"
+      - ".github/workflows/fintech-qa-platform.yml"
+  pull_request:
+    paths:
+      - "fintech-qa-platform/**"
+      - ".github/workflows/fintech-qa-platform.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: fintech-qa-platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: fintech-qa-platform/requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: ruff check services tests e2e
+      - name: Automated API tests
+        run: |
+          mkdir -p reports
+          pytest tests --junitxml=reports/junit.xml
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fintech-qa-platform-junit
+          path: fintech-qa-platform/reports/junit.xml
+          if-no-files-found: ignore
+
+  compose-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start services
+        run: docker compose -f fintech-qa-platform/docker-compose.yml up --build -d
+      - name: Verify payment-to-ledger flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          COMPOSE="docker compose -f fintech-qa-platform/docker-compose.yml"
+          cleanup() { $COMPOSE down -v; }
+          trap cleanup EXIT
+
+          for attempt in $(seq 1 40); do
+            if curl --silent --fail http://localhost:8000/health/ready >/dev/null && \
+               curl --silent --fail http://localhost:8001/health/ready >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 40 ]; then
+              $COMPOSE logs
+              exit 1
+            fi
+            sleep 2
+          done
+
+          response=$(curl --silent --show-error --fail \
+            -H "Content-Type: application/json" \
+            -d '{"idempotency_key":"ci-payment-0001","customer_account":"ci-customer","merchant_account":"ci-merchant","amount_minor":2500,"currency":"RUB"}' \
+            http://localhost:8000/payments)
+          python -c 'import json,sys; d=json.load(sys.stdin); assert d["status"] == "posted"; assert d["duplicate"] is False' <<< "$response"
+
+          retry=$(curl --silent --show-error --fail \
+            -H "Content-Type: application/json" \
+            -d '{"idempotency_key":"ci-payment-0001","customer_account":"ci-customer","merchant_account":"ci-merchant","amount_minor":2500,"currency":"RUB"}' \
+            http://localhost:8000/payments)
+          python -c 'import json,sys; d=json.load(sys.stdin); assert d["duplicate"] is True' <<< "$retry"
+
+          customer=$(curl --silent --show-error --fail http://localhost:8001/accounts/ci-customer/balance)
+          merchant=$(curl --silent --show-error --fail http://localhost:8001/accounts/ci-merchant/balance)
+          python -c 'import json,sys; c=json.loads(sys.argv[1]); m=json.loads(sys.argv[2]); assert c["balance_minor"] == -2500; assert m["balance_minor"] == 2500; assert c["balance_minor"] + m["balance_minor"] == 0' "$customer" "$merchant"
+          echo "Payment-to-ledger Compose smoke test passed."
+
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://localhost:9090/-/ready >/dev/null && \
+               curl --silent --fail http://localhost:3000/api/health >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              $COMPOSE logs prometheus grafana
+              exit 1
+            fi
+            sleep 2
+          done
+
+          payment_metrics=$(curl --silent --show-error --fail http://localhost:8000/metrics)
+          ledger_metrics=$(curl --silent --show-error --fail http://localhost:8001/metrics)
+          python -c 'import sys; assert "http_requests_total" in sys.stdin.read()' <<< "$payment_metrics"
+          python -c 'import sys; assert "http_requests_total" in sys.stdin.read()' <<< "$ledger_metrics"
+
+          sleep 12
+          targets=$(curl --silent --show-error --fail http://localhost:9090/api/v1/targets)
+          config=$(curl --silent --show-error --fail http://localhost:9090/api/v1/status/config)
+          python -c '
+          import json, sys
+          targets = json.loads(sys.argv[1]).get("data", {})
+          target_items = targets.get("activeTargets", [])
+          jobs = set()
+          endpoints = set()
+          for item in target_items:
+              for key in ("labels", "discoveredLabels"):
+                  jobs.add((item.get(key) or {}).get("job"))
+              endpoints.add(item.get("scrapeUrl", ""))
+              endpoints.add(item.get("globalUrl", ""))
+          config_yaml = json.loads(sys.argv[2]).get("data", {}).get("yaml", "")
+          has_payment = "payment-service" in jobs or any("payment:8000" in endpoint for endpoint in endpoints)
+          has_ledger = "ledger-service" in jobs or any("ledger:8001" in endpoint for endpoint in endpoints)
+          assert has_payment and has_ledger, {"jobs": sorted(str(job) for job in jobs), "endpoints": sorted(endpoints), "targets": targets}
+          assert "payment-service" in config_yaml and "ledger-service" in config_yaml
+          print("Prometheus scrape targets verified:", sorted(str(job) for job in jobs))
+          ' "$targets" "$config"
+          echo "Prometheus and Grafana observability smoke checks passed."
+
+          set -o pipefail
+          mkdir -p fintech-qa-platform/reports
+          python fintech-qa-platform/scripts/incident_drill.py --execute-local-drill --timeout-seconds 90 | tee fintech-qa-platform/reports/incident-drill.json
+
+      - name: Upload operational drill evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fintech-operational-drill-evidence
+          path: fintech-qa-platform/reports/incident-drill.json
+          if-no-files-found: ignore
+
+  ui-e2e:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: fintech-qa-platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: fintech-qa-platform/requirements.txt
+      - name: Restore Allure trend history
+        uses: actions/cache/restore@v4
+        with:
+          path: fintech-qa-platform/allure-history
+          key: allure-history-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            allure-history-${{ github.ref_name }}-
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Build and start demo stack
+        run: docker compose up --build -d
+      - name: Wait for frontend
+        run: |
+          for attempt in $(seq 1 40); do
+            if curl --silent --fail http://localhost:8080/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose logs
+          exit 1
+      - name: Run Playwright E2E tests and capture UI screenshot
+        run: |
+          mkdir -p reports allure-results docs/screenshots
+          if [ -d allure-history ]; then
+            mkdir -p allure-results/history
+            cp -R allure-history/. allure-results/history/
+          fi
+          pytest e2e --alluredir=allure-results --junitxml=reports/ui-junit.xml
+      - name: Generate Allure HTML report
+        if: always()
+        run: |
+          if [ -d allure-results ] && [ "$(find allure-results -type f | wc -l)" -gt 0 ]; then
+            sudo apt-get update
+            sudo apt-get install -y default-jre
+            sudo npm install --global allure-commandline
+            allure generate allure-results --clean --output allure-report
+            mkdir -p allure-history
+            if [ -d allure-report/history ]; then
+              cp -R allure-report/history/. allure-history/
+            fi
+          fi
+      - name: Capture Allure report screenshot
+        if: always() && hashFiles('fintech-qa-platform/allure-report/index.html') != ''
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          report = Path("allure-report/index.html").resolve()
+          output = Path("docs/screenshots/allure-report.png")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          with sync_playwright() as playwright:
+              browser = playwright.chromium.launch()
+              page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
+              page.goto(report.as_uri(), wait_until="networkidle")
+              page.screenshot(path=str(output), full_page=True)
+              browser.close()
+          PY
+      - name: Save Allure trend history
+        if: always() && hashFiles('fintech-qa-platform/allure-history/**') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: fintech-qa-platform/allure-history
+          key: allure-history-${{ github.ref_name }}-${{ github.run_id }}
+      - name: Upload Allure report, results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fintech-qa-platform-allure
+          path: |
+            fintech-qa-platform/allure-report
+            fintech-qa-platform/allure-results
+            fintech-qa-platform/docs/screenshots
+          if-no-files-found: ignore
+      - name: Collect service logs
+        if: failure()
+        run: docker compose logs
+      - name: Stop demo stack
+        if: always()
+        run: docker compose down -v

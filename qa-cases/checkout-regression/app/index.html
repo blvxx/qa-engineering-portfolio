@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local storefront used for checkout regression testing.">
+  <title>Northstar Market | Checkout QA Sandbox</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Northstar Market home">NORTHSTAR <span>MARKET</span></a>
+    <p class="header-note">A local test storefront · Fictional products and currency</p>
+  </header>
+  <main id="top" class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">QUALITY ENGINEERING SANDBOX</p>
+        <h1 id="page-title">A better checkout starts with the details.</h1>
+        <p class="intro-copy">A deterministic storefront for testing cart calculations, promotions, fulfilment and order submission.</p>
+      </div>
+      <div class="intro-mark" aria-hidden="true">N</div>
+    </section>
+
+    <section class="section-block" aria-labelledby="products-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / CATALOGUE</p><h2 id="products-title">Featured products</h2></div><span class="section-note">Fixed QA data set</span></div>
+      <div id="product-grid" class="product-grid" aria-label="Products"></div>
+    </section>
+
+    <div class="checkout-layout">
+      <section class="panel cart-panel" aria-labelledby="cart-title">
+        <div class="section-heading compact"><div><p class="eyebrow">02 / YOUR SELECTION</p><h2 id="cart-title">Shopping cart</h2></div><span id="cart-count" class="count-pill">0 items</span></div>
+        <div id="cart-items" class="cart-items"><p class="empty-state">Your cart is empty. Add a product to begin.</p></div>
+        <div class="promo-block">
+          <label for="promo-code">Promo code</label>
+          <div class="promo-controls"><input id="promo-code" name="promo-code" type="text" autocomplete="off" placeholder="Try SAVE10"><button id="apply-promo" class="button button-secondary" type="button">Apply code</button></div>
+          <p id="promo-feedback" class="field-feedback" role="status" aria-live="polite"></p>
+        </div>
+        <div class="totals" aria-label="Order summary">
+          <div><span>Subtotal</span><strong id="subtotal" data-testid="subtotal">CU 0.00</strong></div>
+          <div><span>Discount</span><strong id="discount" data-testid="discount">− CU 0.00</strong></div>
+          <div><span>Shipping</span><strong id="shipping" data-testid="shipping">CU 0.00</strong></div>
+          <div class="total-line"><span>Total</span><strong id="total" data-testid="total">CU 0.00</strong></div>
+        </div>
+      </section>
+
+      <section class="panel details-panel" aria-labelledby="details-title">
+        <div class="section-heading compact"><div><p class="eyebrow">03 / ORDER DETAILS</p><h2 id="details-title">Checkout</h2></div><span class="secure-label">TEST ENVIRONMENT</span></div>
+        <form id="checkout-form" novalidate>
+          <div class="form-grid">
+            <div class="form-field full"><label for="customer-name">Full name *</label><input id="customer-name" name="customer-name" type="text" autocomplete="name" required minlength="2" placeholder="Alex Morgan"></div>
+            <div class="form-field full"><label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="alex@example.com"></div>
+            <div class="form-field full"><label for="fulfilment">Fulfilment method *</label><select id="fulfilment" name="fulfilment"><option value="delivery">Standard delivery · CU 20.00</option><option value="pickup">Store pickup · Free</option></select></div>
+            <div class="form-field full"><label for="address">Delivery address <span id="address-hint">(required)</span></label><input id="address" name="address" type="text" autocomplete="street-address" required placeholder="Street and building number"></div>
+          </div>
+          <p id="form-feedback" class="field-feedback" role="status" aria-live="polite"></p>
+          <button id="place-order" class="button button-primary" type="submit" disabled>Place order · CU 0.00</button>
+          <p class="form-caption">No payment is collected. Submissions stay in this browser session.</p>
+        </form>
+        <section id="order-confirmation" class="confirmation" aria-live="polite" hidden>
+          <span class="confirmation-icon" aria-hidden="true">✓</span>
+          <p class="eyebrow">ORDER ACCEPTED</p>
+          <h3>Thank you. Your test order is confirmed.</h3>
+          <p>Reference: <strong id="order-reference"></strong></p>
+          <p class="confirmation-note">This is a simulated transaction. No payment or fulfilment occurs.</p>
+        </section>
+      </section>
+    </div>
+    <p class="sandbox-note">Portfolio test application only. Product stock, pricing and orders are simulated and reset on page reload.</p>
+    <span id="orders-created" data-testid="orders-created" hidden>0</span>
+  </main>
+  <footer class="site-footer"><span>Northstar Market · QA Sandbox</span><span>Built for reproducible regression testing</span></footer>
+</body>
+</html>

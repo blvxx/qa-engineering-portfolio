@@ -1,0 +1,35 @@
+name: Booking API QA Tests
+on:
+  push:
+    paths:
+      - "qa-cases/api-contract-negative/**"
+      - ".github/workflows/qa-booking-api.yml"
+  pull_request:
+    paths:
+      - "qa-cases/api-contract-negative/**"
+      - ".github/workflows/qa-booking-api.yml"
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: qa-cases/api-contract-negative/requirements.txt
+      - name: Install dependencies
+        run: python -m pip install -r qa-cases/api-contract-negative/requirements.txt
+      - name: Run API QA tests
+        working-directory: qa-cases/api-contract-negative
+        run: pytest -v --cov=app --cov=store --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=100 --junitxml=pytest-report.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: booking-api-qa-junit
+          path: |
+            qa-cases/api-contract-negative/pytest-report.xml
+            qa-cases/api-contract-negative/coverage.xml
+          if-no-files-found: warn

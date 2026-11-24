@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Create Post Request",
+  "type": "object",
+  "required": ["userId", "title", "body"],
+  "additionalProperties": false,
+  "properties": {
+    "userId": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "title": { "type": "string", "minLength": 1 },
+    "body": { "type": "string", "minLength": 1 }
+  }
+}

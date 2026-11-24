@@ -1,0 +1,38 @@
+name: Checkout Playwright Regression
+on:
+  push:
+    paths:
+      - "qa-cases/checkout-regression/**"
+      - ".github/workflows/qa-checkout-regression.yml"
+  pull_request:
+    paths:
+      - "qa-cases/checkout-regression/**"
+      - ".github/workflows/qa-checkout-regression.yml"
+  workflow_dispatch:
+
+jobs:
+  browser-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: qa-cases/checkout-regression/requirements.txt
+      - name: Install Python dependencies
+        run: python -m pip install -r qa-cases/checkout-regression/requirements.txt
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Run browser regression suite
+        working-directory: qa-cases/checkout-regression
+        run: pytest -v --junitxml=pytest-report.xml
+      - name: Upload test report, traces and failure screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkout-playwright-evidence
+          path: |
+            qa-cases/checkout-regression/pytest-report.xml
+            qa-cases/checkout-regression/test-results/
+          if-no-files-found: warn

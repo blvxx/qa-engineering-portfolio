@@ -1,0 +1,21 @@
+groups:
+  - name: fintech-service-alerts
+    rules:
+      - alert: FintechServiceDown
+        expr: up{job=~"payment-service|ledger-service"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.job }} target is unavailable"
+          description: "Prometheus cannot scrape {{ $labels.instance }} for more than 30 seconds."
+      - alert: ElevatedServerErrorRate
+        expr: |
+          sum by (service) (rate(http_requests_total{status=~"5.."}[5m]))
+          / clamp_min(sum by (service) (rate(http_requests_total[5m])), 0.001) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Elevated HTTP 5xx rate on {{ $labels.service }}"
+          description: "More than 5% of observed requests returned 5xx responses for 2 minutes."
