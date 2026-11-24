@@ -81,3 +81,6 @@ See [test scenarios](docs/test-scenarios.md), [source-to-target mapping](docs/so
 ## Limitations
 
 Synthetic data only; one PostgreSQL instance represents logical DWH layers; teaching-scale batch, not an MPP benchmark. The date-slice replay demonstrates orchestration parameters, not a production CDC strategy. Cube and dbt are design-only future extensions. Demo credentials must never be reused in production.
+
+
+The PostgreSQL integration and unit-test workflow is defined in [.github/workflows/dwh-quality.yml](../.github/workflows/dwh-quality.yml).
