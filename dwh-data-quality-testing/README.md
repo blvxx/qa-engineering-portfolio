@@ -1,5 +1,7 @@
 # DWH Data Quality & ETL Testing Platform
 
+[![DWH Data Quality CI](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/dwh-quality.yml/badge.svg)](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/dwh-quality.yml)
+
 > Independent portfolio lab using synthetic invoice data. Not a production bank/DWH implementation and not prior commercial Airflow or Cube experience.
 
 **Target roles:** QA Engineer · Data QA · ETL QA · Integration QA · Python QA Automation
