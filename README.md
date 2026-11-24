@@ -1,10 +1,12 @@
 # Artem Kalinin — QA Engineering Portfolio
 
-**QA Engineer · Web & Mobile QA · Android TV / Smart TV · API Testing · Python Automation**
+**QA Engineering · Web/API Testing · Python Automation · Integration & Data Quality**
 
-I work with functional, regression, exploratory and API testing, combining hands-on product testing with Python and Playwright automation. My focus is risk-based test design, reliable user journeys, data integrity, reproducible defect investigation and release confidence.
+I build reproducible QA case studies around functional, regression, exploratory, API and integration testing. The portfolio combines test design with Python, pytest, Playwright, SQL and Docker-based environments. Its focus is risk-based coverage, reliable user journeys, data integrity, defect investigation and evidence-based release decisions.
 
-**Target roles:** QA Engineer · Manual QA Engineer · API Tester · QA Automation Engineer (Python) · Mobile QA Engineer
+**Target roles:** QA Engineer · Manual QA Engineer · API Tester · QA Automation Engineer (Python) · Integration QA · Data QA
+
+**Mobile scope note:** the repository includes mobile/Android TV test-design checklists and scenario libraries. These documents demonstrate test-design knowledge; they are not presented as evidence of a completed physical-device compatibility matrix.
 
 [GitHub profile](https://github.com/blvxx) · [Email](mailto:blvx8x@gmail.com) · [Telegram](https://t.me/blvlxx)
 
