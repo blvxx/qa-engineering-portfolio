@@ -33,7 +33,7 @@ This repository is the dedicated QA entry point. Selected projects, executable t
 | [Checkout Regression](./qa-cases/checkout-regression) | Cart, pricing, promotions, stock boundaries and checkout UI | 24 Playwright scenarios |
 | [FinTech QA Platform](./fintech-qa-platform) | Payment/Ledger integration, PostgreSQL, invariants, observability and recovery | Successful CI across quality, integration smoke and UI E2E jobs |
 | [DWH Data Quality & ETL Testing](./dwh-data-quality-testing) | Airflow DAG, PostgreSQL raw/staging/core/mart, Python/SQL DQ gates, retries and reconciliation | Dedicated PostgreSQL CI workflow; Airflow orchestration documented and runnable locally |
-| [Playwright QA Lab](https://github.com/blvxx/playwright-qa-lab) | Browser regression, accessibility, persistence and manual test design | 11 E2E tests and 20 documented manual cases |
+| [Playwright QA Lab](https://github.com/blvxx/E2E-Automation) | Browser regression, accessibility, persistence and manual test design | 11 E2E tests and 20 documented manual cases |
 
 ## Data platform and ETL testing
 
@@ -68,11 +68,11 @@ These are implemented portfolio sandboxes and commercial solution concepts, not 
 
 ## CI evidence
 
-- [API Automation — 62 tests](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/api-automation.yml)
-- [Booking API — 31 tests](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/qa-booking-api.yml)
-- [Checkout Regression — 24 scenarios](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/qa-checkout-regression.yml)
-- [FinTech QA Platform](https://github.com/blvxx/qa-engineering-portfolio/actions/workflows/fintech-qa-platform.yml)
-- [Playwright QA Lab — 11 E2E tests](https://github.com/blvxx/playwright-qa-lab/actions/runs/45155361776)
+- [API Automation — 62 tests](https://github.com/blvxx/qa-engineering-labs/actions/workflows/api-automation.yml)
+- [Booking API — 31 tests](https://github.com/blvxx/qa-engineering-labs/actions/workflows/qa-booking-api.yml)
+- [Checkout Regression — 24 scenarios](https://github.com/blvxx/qa-engineering-labs/actions/workflows/qa-checkout-regression.yml)
+- [FinTech QA Platform](https://github.com/blvxx/qa-engineering-labs/actions/workflows/fintech-qa-platform.yml)
+- [Playwright QA Lab — 11 E2E tests](https://github.com/blvxx/E2E-Automation/actions/runs/45155361776)
 
 **Coverage note:** the Booking API's 100% figure is statement coverage for two named modules only; it is not branch coverage, full requirements coverage or proof of production quality. A successful workflow verifies only the checks included in that run.
 
