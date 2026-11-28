@@ -83,3 +83,9 @@ The automated case studies are independent portfolio projects and practice envir
 ---
 
 **Artem Kalinin** · [GitHub](https://github.com/blvxx)
+
+
+## Detailed QA evidence index
+
+[Open the QA Engineering Evidence Index](./docs/qa-engineering-evidence-index.md) for the consolidated reviewer guide: test ownership, strategy, project evidence, cross-platform coverage, API and integration testing, automation and limitations.
+
