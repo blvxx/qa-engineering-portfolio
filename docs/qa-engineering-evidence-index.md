@@ -80,7 +80,7 @@ A fictional storefront used to test a revenue-critical checkout workflow.
 - Responsive layout and accessible form labels.
 - CI retains JUnit results, traces and failure screenshots.
 
-**Evidence:** [Project README](./qa-cases/checkout-regression/) · [Test plan](./qa-cases/checkout-regression/test-plan.md) · [Test cases](./qa-cases/checkout-regression/test-cases.md) · [Successful CI run — 22 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801852)
+**Evidence:** [Project README](./qa-cases/checkout-regression/) · [Test plan](./qa-cases/checkout-regression/test-plan.md) · [Test cases](./qa-cases/checkout-regression/test-cases.md) · [Successful CI run — 24 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801852)
 
 **Boundary:** the storefront, product catalogue and order confirmation are simulated. No real payment gateway, inventory backend or shipping provider is connected.
 
@@ -113,7 +113,7 @@ A fictional payment and ledger sandbox used to exercise API and service-integrat
 - Docker Compose smoke checks and browser-level flows.
 - Observability and a guarded dependency-outage/recovery drill.
 
-**Evidence:** [Project overview](./fintech-qa-platform/overview.html) · [Source and setup](./fintech-qa-platform/) · [Successful CI run — 23 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/46150287622)
+**Evidence:** [Project overview](./fintech-qa-platform/overview.html) · [Source and setup](./fintech-qa-platform/) · [Successful CI run — 28 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/46150287622)
 
 **Boundary:** payment providers and business transactions are simulated. This is a QA sandbox, not a deployed financial product or production certification.
 
