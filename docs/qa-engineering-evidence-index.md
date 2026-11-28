@@ -42,7 +42,7 @@ A reusable REST client and automated suite against the public JSONPlaceholder de
 - Retry policy verifies that transient read requests can retry while write requests are not automatically replayed.
 - Importable Postman collection and CI reporting.
 
-**Evidence:** [README and test plan](./api-automation/) · [Successful CI run — 23 Nov 2026](https://github.com/blvxx/portfolio/actions/runs/45102695248)
+**Evidence:** [README and test plan](./api-automation/) · [Successful CI run — 24 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801546)
 
 **Boundary:** JSONPlaceholder simulates writes; successful POST/PUT/PATCH/DELETE responses do not prove persistent server-side changes. The suite does not claim production authentication, database, load or security coverage.
 
@@ -60,7 +60,7 @@ A self-contained API and test suite for a fictional booking service.
 - Overlapping reservations, cancellation and idempotency replay.
 - Requirement-to-test traceability and hypothetical defect examples, clearly labelled as such.
 
-**Evidence:** [Project README](./qa-cases/api-contract-negative/) · [Test matrix](./qa-cases/api-contract-negative/test-matrix.md) · [Successful CI run — 22 Nov 2026](https://github.com/blvxx/portfolio/actions/runs/44993766677)
+**Evidence:** [Project README](./qa-cases/api-contract-negative/) · [Test matrix](./qa-cases/api-contract-negative/test-matrix.md) · [Successful CI run — 24 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801735)
 
 **Boundary:** the API uses an isolated in-memory store and simplified test-token authentication. It does not verify database transactions, distributed concurrency or a production identity provider. 100% statement coverage is not the same as 100% branch or requirements coverage.
 
@@ -80,7 +80,7 @@ A fictional storefront used to test a revenue-critical checkout workflow.
 - Responsive layout and accessible form labels.
 - CI retains JUnit results, traces and failure screenshots.
 
-**Evidence:** [Project README](./qa-cases/checkout-regression/) · [Test plan](./qa-cases/checkout-regression/test-plan.md) · [Test cases](./qa-cases/checkout-regression/test-cases.md) · [Successful CI run — 22 Nov 2026](https://github.com/blvxx/portfolio/actions/runs/44993763830)
+**Evidence:** [Project README](./qa-cases/checkout-regression/) · [Test plan](./qa-cases/checkout-regression/test-plan.md) · [Test cases](./qa-cases/checkout-regression/test-cases.md) · [Successful CI run — 22 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801852)
 
 **Boundary:** the storefront, product catalogue and order confirmation are simulated. No real payment gateway, inventory backend or shipping provider is connected.
 
@@ -97,7 +97,7 @@ A browser-based task tracker used for UI test design and accessibility regressio
 - Malformed local-storage recovery.
 - Two accessibility findings documented, fixed in the sample application and covered by regression tests.
 
-**Evidence:** [Repository](https://github.com/blvxx/E2E-Automation) · [Manual test cases](https://github.com/blvxx/E2E-Automation/blob/main/docs/test-cases.md) · [Execution report](https://github.com/blvxx/E2E-Automation/blob/main/docs/test-execution-report.md) · [Successful CI run — 23 Nov 2026](https://github.com/blvxx/E2E-Automation/actions/runs/45155361776)
+**Evidence:** [Repository](https://github.com/blvxx/E2E-Automation) · [Manual test cases](https://github.com/blvxx/E2E-Automation/blob/main/docs/test-cases.md) · [Execution report](https://github.com/blvxx/E2E-Automation/blob/main/docs/test-execution-report.md) · [Successful CI run — 28 Nov 2026](https://github.com/blvxx/E2E-Automation/actions/runs/46154202587)
 
 **Execution note:** the manual report records an isolated Chromium harness run. The report documents the local-file navigation restriction and storage shim; native browser persistence is separately exercised by the Playwright CI suite. It is not presented as a user-operated production test session.
 
@@ -113,7 +113,7 @@ A fictional payment and ledger sandbox used to exercise API and service-integrat
 - Docker Compose smoke checks and browser-level flows.
 - Observability and a guarded dependency-outage/recovery drill.
 
-**Evidence:** [Project overview](./fintech-qa-platform/overview.html) · [Source and setup](./fintech-qa-platform/) · [Successful CI run — 23 Nov 2026](https://github.com/blvxx/portfolio/actions/runs/45100258032)
+**Evidence:** [Project overview](./fintech-qa-platform/overview.html) · [Source and setup](./fintech-qa-platform/) · [Successful CI run — 23 Nov 2026](https://github.com/blvxx/qa-engineering-labs/actions/runs/46150287622)
 
 **Boundary:** payment providers and business transactions are simulated. This is a QA sandbox, not a deployed financial product or production certification.
 
@@ -161,13 +161,13 @@ The casebook separates implemented portfolio prototypes from commercial concepts
 
 ## CI evidence
 
-Selected runs reviewed on 23 November 2026:
+Latest verified successful runs reviewed on 24 and 28 November 2026:
 
-- [API Automation](https://github.com/blvxx/portfolio/actions/runs/45102695248) — 62 tests passed on Python 3.10 and 3.12.
-- [Booking API QA](https://github.com/blvxx/portfolio/actions/runs/44993766677) — 31 tests; 100% statement coverage on app.py and store.py.
-- [Checkout Regression](https://github.com/blvxx/portfolio/actions/runs/44993763830) — 24 browser scenarios passed.
-- [FinTech QA Platform](https://github.com/blvxx/portfolio/actions/runs/45100258032) — quality, Compose smoke and UI E2E jobs passed.
-- [Playwright QA Lab](https://github.com/blvxx/E2E-Automation/actions/runs/45155361776) — 11 browser E2E tests passed.
+- [API Automation](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801546) — 62 tests passed on Python 3.10 and 3.12.
+- [Booking API QA](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801735) — 31 tests; 100% statement coverage on app.py and store.py.
+- [Checkout Regression](https://github.com/blvxx/qa-engineering-labs/actions/runs/45370801852) — 24 browser scenarios passed.
+- [FinTech QA Platform](https://github.com/blvxx/qa-engineering-labs/actions/runs/46150287622) — quality, Compose smoke and UI E2E jobs passed.
+- [Playwright QA Lab](https://github.com/blvxx/E2E-Automation/actions/runs/46154202587) — 11 browser E2E tests passed.
 
 ## Additional engineering background
 
