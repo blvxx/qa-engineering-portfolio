@@ -1,6 +1,9 @@
-# Artem Kalinin — QA Engineering Portfolio
+# QA Engineering — Project Evidence & Test Labs
 
-**QA Engineering · Web/API Testing · Python Automation · Integration & Data Quality**
+> **Portfolio navigation:** use the [single career portfolio](https://blvxx.github.io/portfolio/) for the employer-facing overview. This repository contains supporting QA evidence: test projects, automation code, test strategies, reports and CI workflows.
+
+
+**Web/API Testing · Python Automation · Integration & Data Quality**
 
 I build reproducible QA case studies around functional, regression, exploratory, API and integration testing. The portfolio combines test design with Python, pytest, Playwright, SQL and Docker-based environments. Its focus is risk-based coverage, reliable user journeys, data integrity, defect investigation and evidence-based release decisions.
 
